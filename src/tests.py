@@ -1,6 +1,8 @@
 import unittest
 from lexer import parse
+from builder import build
 from tok import Token, TokenType
+import node
 
 class LexerTest(unittest.TestCase):
     def test_integer(self):
@@ -58,6 +60,56 @@ class LexerTest(unittest.TestCase):
             Token('+', TokenType.OPERATOR),
             Token('1', TokenType.INTEGER),
         ])
+
+class BuilderTest(unittest.TestCase):
+    def test_literal(self):
+        self.assertEqual(build('1'), node.ProgramNode(subs=[
+            node.ValueNode(Token('1', TokenType.INTEGER))
+        ]))
+        self.assertEqual(build('3.1415'), node.ProgramNode(subs=[
+            node.ValueNode(Token('3.1415', TokenType.REAL))
+        ]))
+
+    def test_numeric_expression(self):
+        self.assertEqual(build('1+2'), node.ProgramNode(subs=[
+            node.OpNode(Token('+', [
+                node.ValueNode(Token('1', TokenType.INTEGER)),
+                node.ValueNode(Token('2', TokenType.INTEGER))
+            ]))
+        ]))
+        self.assertEqual(build('+-3.14 + 1'), node.ProgramNode(subs=[
+            node.OpNode(Token('+', TokenType.OPERATOR), [
+                node.TermNode(Token('+', TokenType.OPERATOR), [
+                    node.TermNode(Token('-', TokenType.OPERATOR), [
+                        node.ValueNode('1', TokenType.INTEGER)
+                    ])
+                ]),
+                node.ValueNode(Token('1', TokenType.INTEGER))
+            ])
+        ]))
+        self.assertEqual(build('1+++--2.2---+1'), node.ProgramNode(subs=[
+            node.OpNode(Token('+', TokenType.OPERATOR), [
+                node.ValueNode(Token('1', TokenType.INTEGER)),
+                node.OpNode(Token('-', TokenType.OPERATOR), [
+                    node.TermNode(Token('+', TokenType.OPERATOR), [
+                        node.TermNode(Token('+', TokenType.OPERATOR), [
+                            node.TermNode(Token('-', TokenType.OPERATOR), [
+                                node.TermNode(Token('-', TokenType.OPERATOR), [
+                                    node.ValueNode(Token('2.2', TokenType.REAL))
+                                ])
+                            ])
+                        ])
+                    ]),
+                    node.TermNode(Token('-', TokenType.OPERATOR), [
+                        node.TermNode(Token('-', TokenType.OPERATOR), [
+                            node.TermNode(Token('+', TokenType.OPERATOR), [
+                                node.ValueNode(Token('1', TokenType.INTEGER))
+                            ])
+                        ])
+                    ])
+                ])
+            ])
+        ]))
 
 if __name__ == '__main__':
     unittest.main()
