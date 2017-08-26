@@ -22,8 +22,8 @@ class LexerTest(unittest.TestCase):
         ])
 
     def test_operator(self):
-        self.assertEqual(parse('+'), [Token('+'), TokenType.OPERATOR])
-        self.assertEqual(parse('-'), [Token('-'), TokenType.OPERATOR])
+        self.assertEqual(parse('+'), [Token('+', TokenType.OPERATOR)])
+        self.assertEqual(parse('-'), [Token('-', TokenType.OPERATOR)])
         self.assertEqual(parse('+ - + -'), [
             Token('+', TokenType.OPERATOR),
             Token('-', TokenType.OPERATOR),

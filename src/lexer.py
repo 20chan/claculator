@@ -20,7 +20,7 @@ class Lexer:
     def get_next_token(self) -> tok.Token:
         while tok.is_split_char(self.cur):
             self._index += 1
-            
+
         if tok.is_operator(self.cur):
             return self.get_operator()
         if str.isdigit(self.cur):
@@ -28,8 +28,9 @@ class Lexer:
         raise ParseException('알 수 없는 토큰')
 
     def get_operator(self) -> tok.Token:
+        res = tok.Token(self.cur, tok.TokenType.OPERATOR)
         self._index += 1
-        return tok.Token(self.cur, tok.TokenType.OPERATOR)
+        return res
 
     def get_number(self) -> tok.Token:
         return_type = tok.TokenType.INTEGER
