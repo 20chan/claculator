@@ -18,6 +18,9 @@ class Lexer:
         return self._index == len(self.code)
 
     def get_next_token(self) -> tok.Token:
+        while tok.is_split_char(self.cur):
+            self._index += 1
+            
         if tok.is_operator(self.cur):
             return self.get_operator()
         if str.isdigit(self.cur):
@@ -44,6 +47,6 @@ class Lexer:
 def parse(code):
     l = Lexer(code)
     def parse_iter():
-        while not l.is_eof:
+        while not l.is_eof():
             yield l.get_next_token()
     return list(parse_iter())
