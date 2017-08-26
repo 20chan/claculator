@@ -21,5 +21,43 @@ class LexerTest(unittest.TestCase):
             Token('3.3', TokenType.REAL),
         ])
 
+    def test_operator(self):
+        self.assertEqual(parse('+'), [Token('+'), TokenType.OPERATOR])
+        self.assertEqual(parse('-'), [Token('-'), TokenType.OPERATOR])
+        self.assertEqual(parse('+ - + -'), [
+            Token('+', TokenType.OPERATOR),
+            Token('-', TokenType.OPERATOR),
+            Token('+', TokenType.OPERATOR),
+            Token('-', TokenType.OPERATOR),
+        ])
+
+    def test_numeric_expression(self):
+        self.assertEqual(parse('1+1'), [
+            Token('1', TokenType.INTEGER),
+            Token('+', TokenType.OPERATOR),
+            Token('1', TokenType.INTEGER),
+        ])
+        self.assertEqual(parse('+-3.14 + 1'), [
+            Token('+', TokenType.OPERATOR),
+            Token('-', TokenType.OPERATOR),
+            Token('3.14', TokenType.REAL),
+            Token('+', TokenType.OPERATOR),
+            Token('1', TokenType.INTEGER),
+        ])
+        self.assertEqual(parse('1+++--2.2---+1'), [
+            Token('1', TokenType.INTEGER),
+            Token('+', TokenType.OPERATOR),
+            Token('+', TokenType.OPERATOR),
+            Token('+', TokenType.OPERATOR),
+            Token('-', TokenType.OPERATOR),
+            Token('-', TokenType.OPERATOR),
+            Token('2.2', TokenType.REAL),
+            Token('-', TokenType.OPERATOR),
+            Token('-', TokenType.OPERATOR),
+            Token('-', TokenType.OPERATOR),
+            Token('+', TokenType.OPERATOR),
+            Token('1', TokenType.INTEGER),
+        ])
+
 if __name__ == '__main__':
     unittest.main()
