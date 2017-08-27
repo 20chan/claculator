@@ -1,6 +1,7 @@
 import unittest
 from lexer import parse
 from builder import build
+from machine import execute
 from tok import Token, TokenType
 import node
 
@@ -125,6 +126,13 @@ class BuilderTest(unittest.TestCase):
                 ])
             ])
         ]))
+
+class MachineTest(unittest.TestCase):
+    def test_numeric_expression(self):
+        self.assertEqual(execute('1+2'), 3)
+        self.assertEqual(execute('-1+2'), 1)
+        self.assertAlmostEqual(execute('+-3.14 + 1'), -2.14)
+        self.assertAlmostEqual(execute('1+++--2.2---+1'), 2.2)
 
 if __name__ == '__main__':
     unittest.main()
