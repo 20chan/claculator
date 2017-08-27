@@ -96,7 +96,7 @@ class BuilderTest(unittest.TestCase):
             node.OpNode(Token('+', TokenType.OPERATOR), [
                 node.TermNode(Token('+', TokenType.OPERATOR), [
                     node.TermNode(Token('-', TokenType.OPERATOR), [
-                        node.ValueNode('1', TokenType.INTEGER)
+                        node.ValueNode(Token('3.14', TokenType.REAL))
                     ])
                 ]),
                 node.ValueNode(Token('1', TokenType.INTEGER))
