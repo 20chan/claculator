@@ -70,12 +70,27 @@ class BuilderTest(unittest.TestCase):
             node.ValueNode(Token('3.1415', TokenType.REAL))
         ]))
 
+    def test_factor(self):
+        self.assertEqual(build('-1'), node.ProgramNode(subs=[
+            node.TermNode(Token('-', TokenType.OPERATOR), [
+                node.ValueNode(Token('1', TokenType.INTEGER))
+            ])
+        ]))
+
     def test_numeric_expression(self):
         self.assertEqual(build('1+2'), node.ProgramNode(subs=[
-            node.OpNode(Token('+', [
+            node.OpNode(Token('+', TokenType.OPERATOR), [
                 node.ValueNode(Token('1', TokenType.INTEGER)),
                 node.ValueNode(Token('2', TokenType.INTEGER))
-            ]))
+            ])
+        ]))
+        self.assertEqual(build('-1+2'), node.ProgramNode(subs=[
+            node.OpNode(Token('+', TokenType.OPERATOR), [
+                node.TermNode(Token('-', TokenType.OPERATOR), [
+                    node.ValueNode(Token('1', TokenType.INTEGER))
+                ]),
+                node.ValueNode(Token('2', TokenType.INTEGER))
+            ])
         ]))
         self.assertEqual(build('+-3.14 + 1'), node.ProgramNode(subs=[
             node.OpNode(Token('+', TokenType.OPERATOR), [

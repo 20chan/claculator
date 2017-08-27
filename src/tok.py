@@ -10,6 +10,7 @@ def is_operator(char):
     return char in '+-'
 
 class TokenType(Enum):
+    EOF = -1
     NONE = 0
     OPERATOR = 1
     INTEGER = 2
