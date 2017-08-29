@@ -62,6 +62,24 @@ class LexerTest(unittest.TestCase):
             Token('1', TokenType.INTEGER),
         ])
 
+    def test_paren(self):
+        self.assertEqual(parse('2*((1+3)/2+1)'), [
+            Token('2', TokenType.INTEGER),
+            Token('*', TokenType.OPERATOR),
+            Token('(', TokenType.PAREN),
+            Token('(', TokenType.PAREN),
+            Token('1', TokenType.INTEGER),
+            Token('+', TokenType.OPERATOR),
+            Token('3', TokenType.INTEGER),
+            Token(')', TokenType.PAREN),
+            Token('/', TokenType.OPERATOR),
+            Token('2', TokenType.INTEGER),
+            Token('+', TokenType.OPERATOR),
+            Token('1', TokenType.INTEGER),
+            Token(')', TokenType.PAREN),
+            
+        ])
+
 class BuilderTest(unittest.TestCase):
     def test_literal(self):
         self.assertEqual(build('1'), node.ProgramNode(subs=[
@@ -148,6 +166,21 @@ class BuilderTest(unittest.TestCase):
                 ])
             ])
         ]))
+        self.assertEqual(build('2*((1+3)/2+1)'), node.ProgramNode(subs=[
+            node.OpNode(Token('*', TokenType.OPERATOR), [
+                node.ValueNode(Token('2', TokenType.INTEGER)),
+                node.OpNode(Token('+', TokenType.OPERATOR), [
+                    node.OpNode(Token('/', TokenType.OPERATOR), [
+                        node.OpNode(Token('+', TokenType.OPERATOR), [
+                            node.ValueNode(Token('1', TokenType.INTEGER)),
+                            node.ValueNode(Token('3', TokenType.INTEGER))
+                        ]),
+                        node.ValueNode(Token('2', TokenType.INTEGER))
+                    ]),
+                    node.ValueNode(Token('1', TokenType.INTEGER))
+                ])
+            ])
+        ]))
 
 class MachineTest(unittest.TestCase):
     def test_numeric_expression(self):
@@ -157,6 +190,7 @@ class MachineTest(unittest.TestCase):
         self.assertAlmostEqual(execute('1+++--2.2---+1'), 2.2)
         self.assertEqual(execute('-1*-2'), 2)
         self.assertAlmostEqual(execute('4+2/2+1'), 6)
+        self.assertAlmostEqual(execute('2*((1+3)/2+1)'), 6)
 
 if __name__ == '__main__':
     unittest.main()

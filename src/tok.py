@@ -14,4 +14,5 @@ class TokenType(Enum):
     NONE = 0
     OPERATOR = 1
     INTEGER = 2
-    REAL = 3
+    REAL = 3,
+    PAREN = 4

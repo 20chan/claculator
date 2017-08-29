@@ -25,6 +25,8 @@ class Lexer:
             return self.get_operator()
         if str.isdigit(self.cur):
             return self.get_number()
+        if self.cur in ['(', ')']:
+            return self.get_paren()
         raise ParseException('알 수 없는 토큰')
 
     def get_operator(self) -> tok.Token:
@@ -44,6 +46,11 @@ class Lexer:
                 break
             self._index += 1
         return tok.Token(self.code[start:self._index], return_type)
+
+    def get_paren(self) -> tok.Token:
+        res = tok.Token(self.cur, tok.TokenType.PAREN)
+        self._index += 1
+        return res
 
 def parse(code):
     l = Lexer(code)
