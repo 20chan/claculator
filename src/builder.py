@@ -1,17 +1,18 @@
+from typing import List
 import node
 import tok
 from lexer import ParseException
 
 class Builder:
-    def __init__(self, toks):
+    def __init__(self, toks: List[tok.Token]):
         self.toks = toks
         self.toks.append(tok.Token('', tok.TokenType.EOF))
 
-    def pop(self):
+    def pop(self) -> tok.Token:
         return self.toks.pop(0)
 
     @property
-    def top(self):
+    def top(self) -> tok.Token:
         return self.toks[0]
 
     def parse(self) -> node.ProgramNode:
@@ -47,7 +48,7 @@ class Builder:
         else:
             return self.parse_atom()
 
-    def parse_atom(self) -> node.ValueNode:
+    def parse_atom(self) -> node.Node:
         if self.top.code == '(':
             self.pop()
             expr = self.parse_expr()
@@ -56,5 +57,5 @@ class Builder:
             return expr
         return node.ValueNode(self.pop())
 
-def build(code):
+def build(code) -> node.ProgramNode:
     return Builder(__import__('lexer').parse(code)).parse()

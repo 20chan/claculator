@@ -1,3 +1,4 @@
+from typing import List
 import tok
 
 class ParseException(Exception):
@@ -6,15 +7,15 @@ class ParseException(Exception):
         self.msg = msg
 
 class Lexer:
-    def __init__(self, code):
+    def __init__(self, code: str):
         self.code = code
         self._index = 0
 
     @property
-    def cur(self):
+    def cur(self) -> str:
         return self.code[self._index]
 
-    def is_eof(self):
+    def is_eof(self) -> bool:
         return self._index == len(self.code)
 
     def get_next_token(self) -> tok.Token:
@@ -52,7 +53,7 @@ class Lexer:
         self._index += 1
         return res
 
-def parse(code):
+def parse(code) -> List[tok.Token]:
     l = Lexer(code)
     def parse_iter():
         while not l.is_eof():

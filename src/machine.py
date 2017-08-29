@@ -1,6 +1,6 @@
+from operator import add, sub, mul, truediv as div
 from tok import TokenType
 from builder import build
-from operator import add, sub, mul, truediv as div
 import node as Node
 
 class Machine:
