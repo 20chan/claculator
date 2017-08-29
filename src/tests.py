@@ -126,6 +126,28 @@ class BuilderTest(unittest.TestCase):
                 ])
             ])
         ]))
+        self.assertEqual(build('-1*-2'), node.ProgramNode(subs=[
+            node.OpNode(Token('*', TokenType.OPERATOR), [
+                node.TermNode(Token('-', TokenType.OPERATOR), [
+                    node.ValueNode(Token('1', TokenType.INTEGER))
+                ]),
+                node.TermNode(Token('-', TokenType.OPERATOR), [
+                    node.ValueNode(Token('2', TokenType.INTEGER))
+                ]),
+            ])
+        ]))
+        self.assertEqual(build('4+2/2+1'), node.ProgramNode(subs=[
+            node.OpNode(Token('+', TokenType.OPERATOR), [
+                node.ValueNode(Token('4', TokenType.INTEGER)),
+                node.OpNode(Token('+', TokenType.OPERATOR), [
+                    node.OpNode(Token('/', TokenType.OPERATOR), [
+                        node.ValueNode(Token('2', TokenType.INTEGER)),
+                        node.ValueNode(Token('2', TokenType.INTEGER))
+                    ]),
+                    node.ValueNode(Token('1', TokenType.INTEGER))
+                ])
+            ])
+        ]))
 
 class MachineTest(unittest.TestCase):
     def test_numeric_expression(self):
@@ -133,6 +155,8 @@ class MachineTest(unittest.TestCase):
         self.assertEqual(execute('-1+2'), 1)
         self.assertAlmostEqual(execute('+-3.14 + 1'), -2.14)
         self.assertAlmostEqual(execute('1+++--2.2---+1'), 2.2)
+        self.assertEqual(execute('-1*-2'), 2)
+        self.assertAlmostEqual(execute('4+2/2+1'), 6)
 
 if __name__ == '__main__':
     unittest.main()

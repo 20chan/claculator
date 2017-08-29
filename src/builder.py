@@ -20,10 +20,19 @@ class Builder:
         return node.ProgramNode(subs=res)
 
     def parse_arith(self) -> node.Node:
-        lexpr = self.parse_factor()
+        lexpr = self.parse_term()
         if self.top.code in ['+', '-']:
             op = self.pop()
             rexpr = self.parse_arith()
+            return node.OpNode(op, [lexpr, rexpr])
+        else:
+            return lexpr
+
+    def parse_term(self) -> node.Node:
+        lexpr = self.parse_factor()
+        if self.top.code in ['*', '/']:
+            op = self.pop()
+            rexpr = self.parse_term()
             return node.OpNode(op, [lexpr, rexpr])
         else:
             return lexpr
