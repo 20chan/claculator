@@ -1,7 +1,7 @@
 import unittest
 from lexer import parse
 from builder import build
-from machine import execute
+from interpreter import execute
 from tok import Token, TokenType
 import node
 
