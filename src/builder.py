@@ -46,7 +46,16 @@ class Builder:
         if self.top.code in ['+', '-']:
             return node.TermNode(self.pop(), [self.parse_factor()])
         else:
-            return self.parse_atom()
+            return self.parse_power()
+
+    def parse_power(self) -> node.Node:
+        lexpr = self.parse_atom()
+        if self.top.code == '**':
+            op = self.pop()
+            rexpr = self.parse_power()
+            return node.OpNode(op, [lexpr, rexpr])
+        else:
+            return lexpr
 
     def parse_atom(self) -> node.Node:
         if self.top.code == '(':

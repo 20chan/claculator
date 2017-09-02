@@ -7,7 +7,7 @@ def is_split_char(char):
     return char in ' \r\n\t'
 
 def is_operator(char):
-    return char in '+-*/'
+    return char in ['+', '-', '*', '/', '**']
 
 class TokenType(Enum):
     EOF = -1

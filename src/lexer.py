@@ -31,8 +31,11 @@ class Lexer:
         raise ParseException('알 수 없는 토큰')
 
     def get_operator(self) -> tok.Token:
-        res = tok.Token(self.cur, tok.TokenType.OPERATOR)
-        self._index += 1
+        i = self._index
+        while len(self.code) > i and tok.is_operator(self.code[self._index:i + 1]):
+            i += 1
+        res = tok.Token(self.code[self._index:i], tok.TokenType.OPERATOR)
+        self._index = i
         return res
 
     def get_number(self) -> tok.Token:

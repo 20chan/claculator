@@ -18,7 +18,7 @@ class Machine:
         elif isinstance(node, Node.OpNode):
             l = self.visit(node.subs[0])
             r = self.visit(node.subs[1])
-            return {'+': add, '-': sub, '*': mul, '/': div}[node.tok.code](l, r)
+            return {'+': add, '-': sub, '*': mul, '/': div, '**': pow}[node.tok.code](l, r)
         elif isinstance(node, Node.TermNode):
             subn = self.visit(node.subs[0])
             return subn * (-1 if node.tok.code == '-' else 1)
