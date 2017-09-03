@@ -3,6 +3,8 @@ from lexer import parse
 from builder import build
 from interpreter import execute
 from tok import Token, TokenType
+from compiler import compile2bytes
+from machine import run
 import node
 
 class LexerTest(unittest.TestCase):
@@ -207,16 +209,27 @@ class BuilderTest(unittest.TestCase):
             ])
         ]))
 
-class MachineTest(unittest.TestCase):
+calculator_test_cases = [
+    ('1+2', 3),
+    ('-1+2', 1),
+    ('+-3.14 + 1', -2.14),
+    ('1+++--2.2---+1', 2.2),
+    ('-1*-2', 2),
+    ('4+2/2+1', 6),
+    ('2*((1+3)/2+1)', 6),
+    ('2*10**2*2', 400)
+]
+
+class InterpreterTest(unittest.TestCase):
     def test_numeric_expression(self):
-        self.assertEqual(execute('1+2'), 3)
-        self.assertEqual(execute('-1+2'), 1)
-        self.assertAlmostEqual(execute('+-3.14 + 1'), -2.14)
-        self.assertAlmostEqual(execute('1+++--2.2---+1'), 2.2)
-        self.assertEqual(execute('-1*-2'), 2)
-        self.assertAlmostEqual(execute('4+2/2+1'), 6)
-        self.assertAlmostEqual(execute('2*((1+3)/2+1)'), 6)
-        self.assertEqual(execute('2*10**2*2'), 400)
+        for expression, result in calculator_test_cases:
+            self.assertAlmostEqual(execute(expression), result)
+
+class MachineTest(unittest.TestCase):
+    def test_run(self):
+        for expression, result in calculator_test_cases:
+            self.assertAlmostEqual(run(compile2bytes(expression)), result, delta=5)
+
 
 if __name__ == '__main__':
     unittest.main()

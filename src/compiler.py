@@ -9,7 +9,7 @@ class Compiler:
         self.node = node
 
     def convert_to_bytecode(self):
-        return self.visit(self.node)
+        return self.visit(self.node) + [(opcodes.RET_VAL, b'')]
 
     def visit(self, node) -> List[Tuple[int, bytes]]:
         if isinstance(node, Node.ProgramNode):
@@ -42,17 +42,17 @@ class Compiler:
 
 
 def combine_opcodes(codes: List[Tuple[int, bytes]]):
-    pass
+    res = b''
+    for op, arg in codes:
+        res += bytes([op]) + arg
+    return res
 
 def num_to_bytes(x):
     if isinstance(x, int):
-        return x.to_bytes(4, 'big')
+        return struct.pack('i', x)
     elif isinstance(x, float):
-        # TODO: 바이트 배열의 크기 고정
         return struct.pack('f', x)
 
-if __name__ == '__main__':
+def compile2bytes(code):
     from builder import build
-    c = Compiler(build('1+1'))
-    res = c.convert_to_bytecode()
-    print(res)
+    return combine_opcodes(Compiler(build(code)).convert_to_bytecode())
