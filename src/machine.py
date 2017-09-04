@@ -41,8 +41,8 @@ class Machine:
         elif cur == opcodes.PUSH_CONST_REAL:
             self.push(self.get_real())
         elif opcodes.BIN_ADD <= cur <= opcodes.BIN_OR:
-            right = self.pop()
             left = self.pop()
+            right = self.pop()
             self.push({opcodes.BIN_ADD: operator.add,
                     opcodes.BIN_SUB: operator.sub,
                     opcodes.BIN_MUL: operator.mul,
