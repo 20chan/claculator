@@ -1,3 +1,5 @@
+import argparse
+import sys
 import struct
 from typing import List, Tuple
 import node as Node
@@ -56,3 +58,19 @@ def num_to_bytes(x):
 def compile2bytes(code):
     from builder import build
     return combine_opcodes(Compiler(build(code)).convert_to_bytecode())
+
+if __name__ == '__main__':
+    if len(sys.argv) == 0:
+        print('Expression should be given as argument.')
+        exit(-1)
+    output_file = 'compiled.cla'
+    parser = argparse.ArgumentParser()
+    parser.add_argument('exp', help='Expression to compile', type=str)
+    parser.add_argument('-o', '--out', help='Set output file name', type=str)
+    args = parser.parse_args()
+    if args.out:
+        output_file = args.out
+    res = compile2bytes(args.exp)
+    with open(output_file, 'wb') as f:
+        f.write(res)
+    print('done!')
