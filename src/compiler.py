@@ -60,7 +60,7 @@ def compile2bytes(code):
     return combine_opcodes(Compiler(build(code)).convert_to_bytecode())
 
 if __name__ == '__main__':
-    if len(sys.argv) == 0:
+    if len(sys.argv) <= 1:
         print('Expression should be given as argument.')
         exit(-1)
     output_file = 'compiled.cla'

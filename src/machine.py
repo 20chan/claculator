@@ -1,3 +1,4 @@
+import sys
 import struct
 import opcodes
 import operator
@@ -63,3 +64,10 @@ class Machine:
 
 def run(bytecodes):
     return Machine(bytecodes).execute()
+
+if __name__ == '__main__':
+    if len(sys.argv) <= 1:
+        print('Input file path should be given as argument.')
+        exit(-1)
+    with open(sys.argv[1], 'rb') as f:
+        print(run(f.read()))
