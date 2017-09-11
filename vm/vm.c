@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/mman.h>
+#include <math.h>
 #include "opcodes.h"
 
 #define STACK_SIZE 10
@@ -62,6 +63,8 @@ void handle(int code) {
 			case BIN_SUB: res = left - right; break;
 			case BIN_MUL: res = left * right; break;
 			case BIN_DIV: res = left / right; break;
+			case BIN_MOD: res = left % right; break;
+			case BIN_POW: res = pow(left, right); break;
 		}
 		push(res);
 		return;
